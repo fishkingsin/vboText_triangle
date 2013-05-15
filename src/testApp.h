@@ -18,6 +18,13 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-    ofVboMesh mesh;
-    int total;
+    ofVbo vbo;
+	vector<ofVec3f> pos;//[GRID_WIDTH*GRID_HEIGHT*LENGTH];
+	vector<ofVec3f> normal;//[GRID_WIDTH*GRID_HEIGHT*LENGTH];
+	vector<ofFloatColor> color;//[GRID_WIDTH*GRID_HEIGHT*LENGTH];
+	ofVec3f center;
+	int total;
+    int WIDTH;
+    int HEIGHT;
+	int space;
 };
