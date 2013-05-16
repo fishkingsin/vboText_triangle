@@ -2,7 +2,7 @@
 void addFace(vector<ofVec3f> &pos,vector<ofFloatColor> &color,vector<ofVec3f> &normal, ofVec3f a, ofVec3f b, ofVec3f c) {
     
 	ofVec3f _normal = ((b - a).cross(c - a)).normalize();
-    ofFloatColor _color = ofFloatColor::fromHsb(ofRandom(0.1,0.15),1.0,1.0);
+    ofFloatColor _color = ofFloatColor::fromHsb(ofRandom(0.5,0.9),1.0,1.0);
     pos.push_back(a);
     pos.push_back(b);
     pos.push_back(c);
@@ -41,26 +41,35 @@ void testApp::setup(){
     total = 0;
     int width = ofGetWidth();
     int height = ofGetHeight();
-    int step = 40;
+    int step = 80;
     
     WIDTH = width*1.0/step;
     HEIGHT = height*1.0/step;
     
     
-    for(int y = 0 ; y < height-step ;y+=step)
+    int row = 0;
+    int col = 0;
+    for(int y = 0 ; y < height ;y+=step)
     {
-        for (int x = 0; x < width-step; x+=step) {
+        row++;
+        for (int x = 0; x < width; x+=step)
+        {
+            
             
             ofVec3f nw = ofVec3f( x, y , 0);
 			ofVec3f ne = ofVec3f( x + step, y, 0);
 			ofVec3f sw = ofVec3f( x, y + step, 0);
 			ofVec3f se = ofVec3f( x + step, y + step, 0);
-			
-            
-            
+			if(col%2==0 && row%2==1 || col%2==1 && row%2==0)
+            {
+                nw = nw.getRotated(90,ofVec3f( x+step*0.5, y + step*0.5, 0), ofVec3f(0,0,1));
+                ne = ne.getRotated(90,ofVec3f( x+step*0.5, y + step*0.5, 0), ofVec3f(0,0,1));
+                sw = sw.getRotated(90,ofVec3f( x+step*0.5, y + step*0.5, 0), ofVec3f(0,0,1));
+                se = se.getRotated(90,ofVec3f( x+step*0.5, y + step*0.5, 0), ofVec3f(0,0,1));
+            }
             addFace(pos,color,normal,nw,ne,se,sw);
             total+=6;
-            
+            col++ ;
         }
     }
     vbo.setVertexData(pos.data(), total, GL_DYNAMIC_DRAW);
@@ -72,12 +81,22 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
     
-    
+    float count = 0;
+    float count2 = 0;
+    for(int i = 0 ; i< total ;i+=3)
+    {
+        float a = sin((count-=1.1)+ofGetElapsedTimef());
+        float a2 = cos((count2+=0.07));//+ofGetElapsedTimef());
+        color[i].a = a;//*a2;
+        color[i+1].a = a*a2;
+        color[i+2].a = a*a2;
+    }
     
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
+    ofBackground(0);
     ofPushMatrix();
 	ofEnableAlphaBlending();
 	ofSetColor(255, 255, 255);
@@ -89,28 +108,11 @@ void testApp::draw(){
 	vbo.updateColorData(color.data(), total);
 	vbo.updateNormalData(normal.data(), total);
     
-    //	int step = 40;
-    //
-    //
-    //
-    //    int width = ofGetWidth();
-    //    int height = ofGetHeight();
     
-    //    vbo.draw(GL_TRIANGLE_FAN, 0,total);
-    
-    for(int y = 0 ; y < HEIGHT ;y++)
+    for(int i = 0 ; i< total ;i+=3)
     {
-        for (int x = 0; x < WIDTH; x++)
-        {
-			for(int k = 0 ; k<2 ; k++)
-            {
-                
-                int index = ((y*HEIGHT+x) * 3 )* k*3;
-                vbo.draw(GL_TRIANGLE_FAN, index,3);
-                
-            }
-		}
-	}
+        vbo.draw(GL_TRIANGLE_FAN, i,3);
+    }
     
 	vbo.unbind();
 	
@@ -159,6 +161,6 @@ void testApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void testApp::dragEvent(ofDragInfo dragInfo){
     
 }
