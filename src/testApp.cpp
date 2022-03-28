@@ -50,6 +50,7 @@ void testApp::setup(){
     
     int row = 0;
     int col = 0;
+    int space = 5;
     for(int y = 0 ; y < height ;y+=step)
     {
         row++;
@@ -57,11 +58,11 @@ void testApp::setup(){
         {
             
             
-            ofVec3f nw = ofVec3f( x, y , 0);
-			ofVec3f ne = ofVec3f( x + step, y, 0);
-			ofVec3f sw = ofVec3f( x, y + step, 0);
-			ofVec3f se = ofVec3f( x + step, y + step, 0);
-			if(col%2==0 && row%2==1 || col%2==1 && row%2==0)
+            ofVec3f nw = ofVec3f( x + space, y + space , 0);
+			ofVec3f ne = ofVec3f( x + step - space, y + space, 0);
+			ofVec3f sw = ofVec3f( x + space, y + step - space, 0);
+			ofVec3f se = ofVec3f( x + step - space, y + step - space, 0);
+            if((col%2==0 && row%2==1) || (col%2==1 && row%2==0))
             {
                 nw = nw.getRotated(90,ofVec3f( x+step*0.5, y + step*0.5, 0), ofVec3f(0,0,1));
                 ne = ne.getRotated(90,ofVec3f( x+step*0.5, y + step*0.5, 0), ofVec3f(0,0,1));
