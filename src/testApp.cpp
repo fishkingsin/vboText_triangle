@@ -38,6 +38,7 @@ void addFace(vector<ofVec3f> &pos,vector<ofFloatColor> &color,vector<ofVec3f> &n
 //--------------------------------------------------------------
 void testApp::setup(){
     ofEnableAlphaBlending();
+    ofSetFullscreen(true);
     total = 0;
     int width = ofGetWidth();
     int height = ofGetHeight();
